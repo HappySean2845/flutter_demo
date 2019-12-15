@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   
   @override
   void initState() {
-    bloc.counter.listen((_returnedCount) {
+    bloc.counters.listen((_returnedCount) {
       setState(() {
         _counter = _returnedCount;
       });
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 //导航到新路由
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return RouterTestRoute();
+                  return RouterTestRoute(bloc);
                 }));
               },
             ),
@@ -131,8 +131,15 @@ class TipRoute extends StatelessWidget {
 }
 
 class RouterTestRoute extends StatelessWidget {
+  final CounterBloc bloc;
+  RouterTestRoute(this.bloc);
+  static int _counter = 1;
   @override
   Widget build(BuildContext context) {
+    bloc.counters.listen((_returnedCount) {
+      print(_returnedCount);
+      _counter = _returnedCount;
+    });
     return Scaffold(
         appBar: AppBar(
           title: Text("提示"),
@@ -155,7 +162,7 @@ class RouterTestRoute extends StatelessWidget {
               //输出`TipRoute`路由返回结果
               print("路由返回值: $result");
             },
-            child: Text("打开提示页"),
+            child: Text("$_counter"),
           ),
         ));
   }
